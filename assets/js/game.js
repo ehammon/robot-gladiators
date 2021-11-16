@@ -17,6 +17,7 @@ var fightOrSkip = function () {
 
     // If player picks "skip" confirm and then stop the loop
     promptFight = promptFight.toLowerCase();
+
     if (promptFight === "skip") {
     // confirm player wants to skip
     var confirmSkip = window.confirm("Are you sure you'd like to quit?");
@@ -29,7 +30,6 @@ var fightOrSkip = function () {
 
         return true;
         }
-        
     }
     return false;
 };
@@ -37,15 +37,22 @@ var fightOrSkip = function () {
 // fight function (now with parameter for enemy's name)
 var fight = function(enemy) {
     
+    //keep track of who goes first
+    var isPlayerTurn = true;
+
+    // randomly change turn order
+    if (Math.random() > 0.5) {
+        isPlayerTurn = false;
+    }
     //repeat and execute as long as the enemy-robot is alive
     while (playerInfo.health > 0 && enemy.health > 0){
+        if (isPlayerTurn) {
         //ask player if they'd like to fight or skip using the fightOrSkip function
        if (fightOrSkip()) {
            // if true, leave the fight by breaking the loop
            break;
        }
         var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
-    }
 
     //generate random damage value based on player's attack power
     var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
@@ -64,11 +71,12 @@ var fight = function(enemy) {
       playerInfo.money = playerInfo.money + 20;
 
       // leave while() loop since enemy is dead
-      
+      break;
     } else {
       window.alert(enemy.name + ' still has ' + enemy.health + ' health left.');
     }
-
+    // player gets attacked first 
+   } else {
     // generate random damage value based on enemy's attack power
     var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
 
@@ -82,10 +90,14 @@ var fight = function(enemy) {
     if (playerInfo.health <= 0) {
       window.alert(playerInfo.name + ' has died!');
       // leave while() loop if player is dead
-      
+      break;
     } else {
       window.alert(playerInfo.name + ' still has ' + playerInfo.health + ' health left.');
     }
+  }
+  //switch turn order for next round
+  isPlayerTurn = !isPlayerTurn;
+}
 };
 
 // function to start a new game
